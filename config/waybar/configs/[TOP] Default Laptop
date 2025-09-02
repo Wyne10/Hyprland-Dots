@@ -38,10 +38,7 @@
 	"hyprland/workspaces#rw",
 	"clock",
 	"custom/separator#dot-line",
-	"custom/weather",
-	"custom/separator#dot-line",
 	"idle_inhibitor",	
-	"custom/hint",	
 	],
 
 "modules-right": [
@@ -54,6 +51,8 @@
 	"custom/separator#line",  
 	"group/audio",
 	"custom/separator#dot-line", 
+	"keyboard-state",
+	"custom/keyboard",
 	"group/status",
 	],
 }
