@@ -14,6 +14,12 @@ ignore_patterns=(
   Name"
   )
 
+# Opposite to ignore list
+match_patterns=(
+  "gaming-keyboard"
+  )
+
+use_match_patterns=false
 
 # Create layout file with default layout if it does not exist
 if [ ! -f "$layout_file" ]; then
@@ -69,16 +75,34 @@ is_ignored() {
     return 1 # Device does not match any ignore pattern
 }
 
+is_not_matching() {
+    local device_name=$1
+    for pattern in "${match_patterns[@]}"; do
+        if [[ "$device_name" == *"$pattern"* ]]; then
+            return 1 # Device matches pattern
+        fi
+    done
+    return 0 # Device does not match any pattern
+
+}
+
 # Function to change keyboard layout
 change_layout() {
     local error_found=false
 
     while read -r name; do
-        if is_ignored "$name"; then
-            echo "Skipping ignored device: $name"
-            continue
-        fi
-        
+	if [ "$use_match_patterns" = true ]; then
+	    if is_not_matching "$name"; then
+                echo "Skipping ignored device: $name"
+                continue
+	    fi
+	else
+	    if is_ignored "$name"; then
+                echo "Skipping ignored device: $name"
+                continue
+            fi
+        fi 
+                
         echo "Switching layout for $name to $new_layout..."
 	      hyprctl switchxkblayout "$name" "$next_index"
         if [ $? -ne 0 ]; then
